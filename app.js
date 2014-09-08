@@ -5,15 +5,20 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// Database
-
-var mongo = require('mongoskin');
-var db = mongo.db("mongodb://localhost:27017/moodtrack", {native_parser:true});
-
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+// Database
+var mongo = require('mongoskin');
+var db = "";
+
+if (app.get('env') === 'development') {
+    db = mongo.db("mongodb://localhost:27017/moodtrack", {native_parser:true});
+} else {
+    db = mongo.db("mongodb://heroku_app29348857:tp2u4rqtbcot798v077qd7ksae@ds035270.mongolab.com:35270/heroku_app29348857", {native_parse:true});
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
