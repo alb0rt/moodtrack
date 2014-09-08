@@ -39,10 +39,8 @@ router.post('/addrating', function(req, res) {
 
 
 	// Check to see if valid user
-	collection.find({"username" : userName}).toArray(function(err, result) {
+	collection.find({"username" : userName, "phonenumber" : phoneNumber}).toArray(function(err, result) {
 		// Redirect to new rating page if user doens't exist
-		console.log("-----------------------");
-		console.log(result);
 		if(!result.length) {
 			console.log("Username not found");
 			res.location("newrating");
