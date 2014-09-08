@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var twilio = require('twilio');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -21,6 +22,25 @@ router.get('/moodlist', function(req, res) {
 /* GET add new rating page. */
 router.get('/newrating', function(req, res) {
 	res.render('newrating', {title: 'Add Daily Rating'});
+});
+
+router.post('/addrating/sms', function(req, res) {
+	if (twilio.validateExpressRequest(request, config.twilio.key, {url: config.twilio.smsWebhook}) || config.disableTwilioSigCheck) {
+        res.header('Content-Type', 'text/xml');
+        var body = request.param('Body').trim();
+
+        // the number the vote it being sent to (this should match an Event)
+        var to = request.param('To');
+        
+        // the voter, use this to keep people from voting more than once
+        var from = request.param('From');
+
+        res.render('index', {title:"hit"});
+    } else {
+    	res.statusCode = 403;
+    	res.render('forbidden');
+    }
+        
 });
 
 /* POST to add rating service */
