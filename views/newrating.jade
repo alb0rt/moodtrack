@@ -1,0 +1,9 @@
+extends layout
+
+block content
+	h1=title
+	form#formAddRating(name="addrating", method="post", action="/addrating")
+		input#inputUserName(type="text", placeholder="Username", name="username")
+		input#inputUserNumber(type="text", placeholder="Phone Number", name="phonenumber")
+		input#inputRating(type="text", placeholder="Rating", name="rating")
+		button#btnSubmit(type="submit") submit
