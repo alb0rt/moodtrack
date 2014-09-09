@@ -34,6 +34,7 @@ router.post('/addrating/sms', function(req, res) {
         
         // the voter, use this to keep people from voting more than once
         var from = request.param('From');
+        console.log("received sms");
         res.send('<Response><Sms>Vote recorded</Sms></Response>'); 
 
         res.render('index', {title:"hit"});
