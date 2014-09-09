@@ -24,7 +24,7 @@ router.get('/newrating', function(req, res) {
 	res.render('newrating', {title: 'Add Daily Rating'});
 });
 
-router.post('/addrating/sms', function(req, res) {
+router.post('/sms', function(req, res) {
 	if (twilio.validateExpressRequest(request, config.twilio.key, {url: config.twilio.smsWebhook}) || config.disableTwilioSigCheck) {
         res.header('Content-Type', 'text/xml');
         var body = request.param('Body').trim();
