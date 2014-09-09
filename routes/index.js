@@ -42,7 +42,6 @@ router.post('/addrating/sms', function(req, res) {
     	res.statusCode = 403;
     	res.render('forbidden');
     }
-        
 });
 
 /* POST to add rating service */
