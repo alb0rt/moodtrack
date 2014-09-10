@@ -25,6 +25,7 @@ router.get('/newrating', function(req, res) {
 });
 
 router.post('/sms', function(req, res) {
+	console.log("received sms");
 	if (twilio.validateExpressRequest(request, config.twilio.key, {url: config.twilio.smsWebhook}) || config.disableTwilioSigCheck) {
         res.header('Content-Type', 'text/xml');
         var body = request.param('Body').trim();
@@ -36,8 +37,6 @@ router.post('/sms', function(req, res) {
         var from = request.param('From');
         console.log("received sms");
         res.send('<Response><Sms>Vote recorded</Sms></Response>'); 
-
-        res.render('index', {title:"hit"});
     } else {
     	res.statusCode = 403;
     	res.render('forbidden');
