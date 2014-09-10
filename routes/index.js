@@ -39,6 +39,7 @@ router.post('/sms', function(req, res) {
         console.log("preparing to send sms");
         res.send('<Response><Sms>Vote recorded</Sms></Response>'); 
     } else {
+    	console.log("error");
     	res.statusCode = 403;
     	res.render('forbidden');
     }
