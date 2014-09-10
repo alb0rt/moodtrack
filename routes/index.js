@@ -25,8 +25,9 @@ router.get('/newrating', function(req, res) {
 });
 
 router.post('/sms', function(req, res) {
-	console.log("received sms");
 	if (twilio.validateExpressRequest(req, config.twilio.key, {url: config.twilio.smsWebhook}) || config.disableTwilioSigCheck) {
+        console.log("received sms");
+
         res.header('Content-Type', 'text/xml');
         var body = request.param('Body').trim();
 
