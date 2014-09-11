@@ -27,15 +27,23 @@ router.get('/newrating', function(req, res) {
 router.post('/sms', function(req, res) {
 	console.log("received sms");
 	if (twilio.validateExpressRequest(req, config.twilio.key, {url: config.twilio.smsWebhook}) || config.disableTwilioSigCheck) {
+        console.log("preparing to send sms 1");
 
         res.header('Content-Type', 'text/xml');
+
+                console.log("preparing to send sms 2");
+
         var body = req.param('Body').trim();
+
+                console.log("preparing to send sms 3");
+
 
         // the number the vote it being sent to (this should match an Event)
         var to = req.param('To');
         
         // the voter, use this to keep people from voting more than once
         var from = req.param('From');
+
         console.log("preparing to send sms");
         res.send('<Response><Sms>Vote recorded</Sms></Response>'); 
     } else {
