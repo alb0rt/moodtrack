@@ -35,7 +35,7 @@ router.post('/sms', function(req, res) {
         var body = req.param('Body').trim();
         // the voter, use this to keep people from voting more than once
         var from = req.param('From');
-
+/*
        	//set internal db variable
 		var db = req.db;
 
@@ -63,7 +63,7 @@ router.post('/sms', function(req, res) {
 				});
 			}
 		});
-
+*/
         res.send('<Response><Sms>Rating recorded</Sms></Response>'); 
     } else {
     	console.log("error");
@@ -116,35 +116,5 @@ router.post('/addrating', function(req, res) {
 	});
 });
 
-function addRating(userName, phoneNumber, rating)
-{
-	//set internal db variable
-	var db = req.db;
-
-	// Set our collection
-	var collection = db.collection('moodtrack');
-
-	// Check to see if valid user
-	collection.find({"phonenumber" : phoneNumber}).toArray(function(err, result) {
-		// Redirect to new rating page if user doens't exist
-		if(!result.length) {
-			console.log("Username not found");
-		} else {
-			// Submit to the DB
-			collection.insert({
-				"username" : userName, 
-				"phoneNumber" : phoneNumber,
-				"timestamp" : Date.now(),
-				"rating" : rating,
-				"question": "How do you feel about work"
-			}, function(err, doc) {
-				if(err) {
-					// If it failed, send error
-					res.send("There was a problem adding to the database");
-				} 
-			});
-		}
-	});
-}
 
 module.exports = router;
