@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var twilio = require('twilio');
 var config = require('../config');
-//var twilio = require('twilio')(config.twilio.sid, config.twilio.key);
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -28,37 +27,18 @@ router.get('/newrating', function(req, res) {
 
 router.post('/sms', function(req, res) {
 	console.log("received sms");
-/*
-	twilio.messages.create({
-		to: "+12036450330",
-		from: "+12038899300",
-		body: "test"
-	}, function(err, message) {
-		console.log(message.sid);
-	});
 
-*/
-	
 	if (twilio.validateExpressRequest(req, config.twilio.key, {url: config.twilio.smsWebhook}) || config.disableTwilioSigCheck) {
-        console.log("preparing to send sms 1");
 
         res.header('Content-Type', 'text/xml');
 
-                console.log("preparing to send sms 2");
-
         var body = req.param('Body').trim();
-
-                console.log("preparing to send sms 3");
-
-
-        // the number the vote it being sent to (this should match an Event)
-        var to = req.param('To');
-        
         // the voter, use this to keep people from voting more than once
         var from = req.param('From');
 
-        console.log("preparing to send sms");
-        res.send('<Response><Sms>Vote recorded</Sms></Response>'); 
+        addRating("Neena", from, body);
+
+        res.send('<Response><Sms>Rating recorded</Sms></Response>'); 
     } else {
     	console.log("error");
     	res.statusCode = 403;
@@ -68,6 +48,7 @@ router.post('/sms', function(req, res) {
 
 /* POST to add rating service */
 router.post('/addrating', function(req, res) {
+
 
 	//set internal db variable
 	var db = req.db;
@@ -108,5 +89,36 @@ router.post('/addrating', function(req, res) {
 		}
 	});
 });
+
+function addRating(userName, phoneNumber, rating)
+{
+	//set internal db variable
+	var db = req.db;
+
+	// Set our collection
+	var collection = db.collection('moodtrack');
+
+	// Check to see if valid user
+	collection.find({"phonenumber" : phoneNumber}).toArray(function(err, result) {
+		// Redirect to new rating page if user doens't exist
+		if(!result.length) {
+			console.log("Username not found");
+		} else {
+			// Submit to the DB
+			collection.insert({
+				"username" : userName, 
+				"phoneNumber" : phoneNumber,
+				"timestamp" : Date.now(),
+				"rating" : rating,
+				"question": "How do you feel about work"
+			}, function(err, doc) {
+				if(err) {
+					// If it failed, send error
+					res.send("There was a problem adding to the database");
+				} 
+			});
+		}
+	});
+}
 
 module.exports = router;
