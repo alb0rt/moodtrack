@@ -35,7 +35,7 @@ router.post('/sms', function(req, res) {
         var body = req.param('Body').trim();
         // the voter, use this to keep people from voting more than once
         var from = req.param('From');
-/*
+
        	//set internal db variable
 		var db = req.db;
 
@@ -43,7 +43,7 @@ router.post('/sms', function(req, res) {
 		var collection = db.collection('moodtrack');
 
 		// Check to see if valid user
-		collection.find({"phonenumber" : phoneNumber}).toArray(function(err, result) {
+		collection.find({"phonenumber" : from}).toArray(function(err, result) {
 			// Redirect to new rating page if user doens't exist
 			if(!result.length) {
 				console.log("Username not found");
@@ -63,7 +63,7 @@ router.post('/sms', function(req, res) {
 				});
 			}
 		});
-*/
+
         res.send('<Response><Sms>Rating recorded</Sms></Response>'); 
     } else {
     	console.log("error");
