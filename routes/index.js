@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var twilio = require('twilio');
+var config = require('../config');
+//var twilio = require('twilio')(config.twilio.sid, config.twilio.key);
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -26,6 +28,17 @@ router.get('/newrating', function(req, res) {
 
 router.post('/sms', function(req, res) {
 	console.log("received sms");
+/*
+	twilio.messages.create({
+		to: "+12036450330",
+		from: "+12038899300",
+		body: "test"
+	}, function(err, message) {
+		console.log(message.sid);
+	});
+
+*/
+	
 	if (twilio.validateExpressRequest(req, config.twilio.key, {url: config.twilio.smsWebhook}) || config.disableTwilioSigCheck) {
         console.log("preparing to send sms 1");
 
