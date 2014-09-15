@@ -54,8 +54,8 @@ router.post('/sms', function(req, res) {
 			else {
 				// Submit to the DB
 				collection.insert({
-					"username" : "Albert", 
-					"phoneNumber" : from,
+					"username" : result[0].username, 
+					"phonenumber" : from,
 					"timestamp" : new Date(),
 					"rating" : body,
 					"question": "How do you feel about work"
@@ -102,7 +102,34 @@ router.post('/addrating', function(req, res) {
 			res.redirect("newrating");
 		}  
 		else {
-			// Check to see if user has already voted 
+			
+			// Submit to the DB
+			collection.insert({
+				"username" : userName, 
+				"phonenumber" : result[0].phonenumber,
+				"timestamp" : new Date(),
+				"rating" : rating,
+				"question": "How do you feel about work"
+			}, function(err, doc) {
+				if(err) {
+					// If it failed, send error
+					res.send("There was a problem adding to the database");
+				} else {
+					res.location("moodlist");
+					res.redirect("moodlist");
+				}
+			});
+		}	
+		
+	});
+});
+
+
+module.exports = router;
+
+
+/*
+// Check to see if user has already voted 
 			var today = new Date();
 			var yesterday = new Date();
 			yesterday.setDate(yesterday.getDate() - 1);
@@ -112,27 +139,4 @@ router.post('/addrating', function(req, res) {
 					res.location("newrating");
 					res.redirect("newrating");
 				} else {
-					// Submit to the DB
-					collection.insert({
-						"username" : userName, 
-						"phoneNumber" : phoneNumber,
-						"timestamp" : new Date(),
-						"rating" : rating,
-						"question": "How do you feel about work"
-					}, function(err, doc) {
-						if(err) {
-							// If it failed, send error
-							res.send("There was a problem adding to the database");
-						} else {
-							res.location("moodlist");
-							res.redirect("moodlist");
-						}
-					});
-				}
-			});
-		}
-	});
-});
-
-
-module.exports = router;
+*/
