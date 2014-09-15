@@ -25,6 +25,7 @@ router.get('/newrating', function(req, res) {
 	res.render('newrating', {title: 'Add Daily Rating'});
 });
 
+/* POST sms to add rating service */
 router.post('/sms', function(req, res) {
 	console.log("received sms");
 
@@ -44,21 +45,25 @@ router.post('/sms', function(req, res) {
 
 		// Check to see if valid user
 		collection.find({"phonenumber" : from}).toArray(function(err, result) {
-			// Redirect to new rating page if user doens't exist
+			// Send error if user doens't exist
 			if(!result.length) {
-				console.log("Username not found");
-			} else {
+				console.log("User not found");
+				res.send("<Response><Sms>User not found</Sms></Response>");
+			}
+			// Send error if user has already sent rating for the day
+			else {
 				// Submit to the DB
 				collection.insert({
-					"username" : "Neena", 
+					"username" : "Albert", 
 					"phoneNumber" : from,
-					"timestamp" : Date.now(),
+					"timestamp" : new Date(),
 					"rating" : body,
 					"question": "How do you feel about work"
 				}, function(err, doc) {
 					if(err) {
 						// If it failed, send error
-						res.send("There was a problem adding to the database");
+						console.log("There was a problem adding to the database");
+						res.send("<Response><Sms>Error adding to the database</Sms></Reponse>");
 					} 
 				});
 			}
@@ -89,27 +94,40 @@ router.post('/addrating', function(req, res) {
 
 
 	// Check to see if valid user
-	collection.find({"username" : userName, "phonenumber" : phoneNumber}).toArray(function(err, result) {
+	collection.find({"username" : userName}).toArray(function(err, result) {
 		// Redirect to new rating page if user doens't exist
 		if(!result.length) {
 			console.log("Username not found");
 			res.location("newrating");
 			res.redirect("newrating");
-		} else {
-			// Submit to the DB
-			collection.insert({
-				"username" : userName, 
-				"phoneNumber" : phoneNumber,
-				"timestamp" : Date.now(),
-				"rating" : rating,
-				"question": "How do you feel about work"
-			}, function(err, doc) {
-				if(err) {
-					// If it failed, send error
-					res.send("There was a problem adding to the database");
+		}  
+		else {
+			// Check to see if user has already voted 
+			var today = new Date();
+			var yesterday = new Date();
+			yesterday.setDate(yesterday.getDate() - 1);
+			collection.find({"timestamp" : {$gte: yesterday, $lt: today}}).toArray(function(err, result) {
+				if(result.length) {
+					console.log("Already voted today");
+					res.location("newrating");
+					res.redirect("newrating");
 				} else {
-					res.location("moodlist");
-					res.redirect("moodlist");
+					// Submit to the DB
+					collection.insert({
+						"username" : userName, 
+						"phoneNumber" : phoneNumber,
+						"timestamp" : new Date(),
+						"rating" : rating,
+						"question": "How do you feel about work"
+					}, function(err, doc) {
+						if(err) {
+							// If it failed, send error
+							res.send("There was a problem adding to the database");
+						} else {
+							res.location("moodlist");
+							res.redirect("moodlist");
+						}
+					});
 				}
 			});
 		}
