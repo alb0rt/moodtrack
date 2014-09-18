@@ -21,7 +21,7 @@ function sendReminder() {
 				client.sms.messages.create({
 					to : entries.phonenumber,
 					from : config.twilio.number,
-					body : "Testing multi-broadcast"
+					body : "How was work today? (1 - Awful to 5 - Awesome!)"
 				}, function(error, message) {
 					if(!error) {
 						console.log("Message successfully sent with SID: ");
