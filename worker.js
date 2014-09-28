@@ -1,5 +1,6 @@
 var twilio = require('twilio');
 var config = require('./config');
+var utils = require('./utils');
 var client = new twilio.RestClient(config.twilio.sid, config.twilio.key);
 
 var mongo = require('mongoskin');
@@ -14,65 +15,48 @@ if(process.env.ENV == 'development') {
 var collection = db.collection("moodtrack");
 
 function sendReminder() {
-	var users = collection.distinct("username", function(err, result) {
-		for(var i = 0; i < result.length; i++){
-			collection.findOne({"username":result[i]}, function(err, entries) {
-				console.log(entries.phonenumber);
-				client.sms.messages.create({
-					to : entries.phonenumber,
-					from : config.twilio.number,
-					body : "How was work today? (1 - Awful to 5 - Awesome!)"
-				}, function(error, message) {
-					if(!error) {
-						console.log("Message successfully sent with SID: ");
-						console.log(message.sid);
+
+	// check if work day
+	if(!utils.isVacation())
+	{
+		var users = collection.distinct("username", function(err, result) {
+			for(var i = 0; i < result.length; i++){
+				collection.findOne({"username":result[i]}, function(err, entries) {
+					console.log(entries.phonenumber);
+					client.sms.messages.create({
+						to : entries.phonenumber,
+						from : config.twilio.number,
+						body : "How was work today? (1 - Awful to 5 - Awesome!)"
+					}, function(error, message) {
+						if(!error) {
+							console.log("Message successfully sent with SID: ");
+							console.log(message.sid);
 
 
-						console.log("Message sent on: ");
-						console.log(message.dateCreated);
-					} else {
-						console.log("Error sending message");
-						console.log(err);
-					}
+							console.log("Message sent on: ");
+							console.log(message.dateCreated);
+						} else {
+							console.log("Error sending message");
+							console.log(err);
+						}
+					});
 				});
-			});
-		}
-	});
-		
-
-
-/*
-	client.sms.messages.create({
-		to : '+12036450330',
-		from : config.twilio.number,
-		body : 'How was work today?'
-	}, function(error, message) {
-		if(!error) {
-			console.log("Message successfully sent with SID: ");
-			console.log(message.sid);
-
-			console.log("Message sent on: ");
-			console.log(message.dateCreated);
-		} else {
-			console.log("Error sending message");
-		}
-	});
-
-	client.sms.messages.create({
-		to : '+12034346561',
-		from : config.twilio.number,
-		body : 'How was work today?'
-	}, function(error, message) {
-		if(!error) {
-			console.log("Message successfully sent with SID: ");
-			console.log(message.sid);
-
-			console.log("Message sent on: ");
-			console.log(message.dateCreated);
-		} else {
-			console.log("Error sending message");
-		}
-	});*/
+			}
+		});
+	} else {
+		console.log("Worker.js :: It's a vacation, baby!");
+	}			
 }
 
+function testSender() {
+	if(!utils.isVacation())
+	{
+		console.log("Test");
+	} else {
+		console.log("Worker.js :: It's a vacation, baby!");
+
+	}
+}
+
+//testSender();
 sendReminder();
