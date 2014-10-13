@@ -7,4 +7,4 @@ block content
     if (moodList.length === 0)
       | User not found
     each mood, i in moodList
-        p #{mood.timestamp.getMonth()}/#{mood.timestamp.getDate()}: #{mood.rating}
+        p <b>#{mood.timestamp.getMonth()}/#{mood.timestamp.getDate()}/#{mood.timestamp.getYear()}</b>: #{mood.rating}

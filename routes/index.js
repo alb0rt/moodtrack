@@ -5,7 +5,7 @@ var config = require('../config');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: "How's work treating me?" });
+  res.render('index', { title: "Moodtrack" });
 });
 
 router.post('/', function(req, res) {
@@ -18,7 +18,7 @@ router.post('/', function(req, res) {
 		if (err) 
 			throw err;
 		console.log(result);
-		res.render('moodlist', {title: "How's work treating me?", moodList: result || []});
+		res.render('moodlist', {title: "Mood List", moodList: result || []});
 	});
 });
 
