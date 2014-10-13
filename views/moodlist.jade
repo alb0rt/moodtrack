@@ -2,9 +2,12 @@ extends layout
 
 block content
   h1= title
-
+  h2 Hey #{moodList[0].username}! 
+  p Here's how work has been
+  <br>
   u1
     if (moodList.length === 0)
       | User not found
+
     each mood, i in moodList
-        p <b>#{mood.timestamp.getMonth()}/#{mood.timestamp.getDate()}/#{mood.timestamp.getYear()}</b>: #{mood.rating}
+        p <b>#{mood.timestamp.getMonth()}/#{mood.timestamp.getDate()}/#{mood.timestamp.getFullYear()}</b>: #{mood.rating}
