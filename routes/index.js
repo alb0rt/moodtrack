@@ -83,7 +83,8 @@ router.post('/sms', function(req, res) {
 			}
 		});
 
-        res.send('<Response><Sms>Rating recorded</Sms></Response>'); 
+        res.send('<Response><Sms>' + utils.generateResponse(body) + '</Sms></Response>'); 
+
     } else {
     	console.log("error");
     	res.statusCode = 403;

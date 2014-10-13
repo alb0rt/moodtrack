@@ -20,3 +20,27 @@ exports.isVacation = function() {
 
 	return bool;
 };
+
+exports.generateResponse = function(rating) {
+	var response = "Rating recorded, ";
+	switch(rating) {
+		case 1:
+		case 2:
+			response += ":( Hope tomorrow is better!";
+			break;
+		case 3:
+			response += "turn that 3 into a 4 tomorrow :)";
+			break;
+		case 4:
+			response = "Yea! Keep the good days rolling";
+			break;
+		case 5:
+			response = "High five! Killing it!";
+			break;
+		default:
+			break;
+	}
+
+	return response;
+}
+
