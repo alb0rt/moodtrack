@@ -3,6 +3,12 @@ extends layout
 block content
   h1.
     Mood History
+
+  form#formAddRating(name="addrating", method="post", action="/addrating")
+  input#inputUserName(type="text", placeholder="Username", name="username")
+  input#inputUserNumber(type="text", placeholder="Phone Number", name="phonenumber")
+  button#btnSubmit(type="submit") submit
+
   u1
     for mood, i in moodlist
         p #{mood.timestamp} #{mood.phonenumber} #{mood.username} #{mood.rating}

@@ -93,35 +93,23 @@ router.post('/addrating', function(req, res) {
 	var collection = db.collection('moodtrack');
 
 
-	// Check to see if valid user
-	collection.find({"username" : userName}).toArray(function(err, result) {
-		// Redirect to new rating page if user doens't exist
-		if(!result.length) {
-			console.log("Username not found");
-			res.location("newrating");
-			res.redirect("newrating");
-		}  
-		else {
-			
-			// Submit to the DB
-			collection.insert({
-				"username" : userName, 
-				"phonenumber" : result[0].phonenumber,
-				"timestamp" : new Date(),
-				"rating" : rating,
-				"question": "How do you feel about work"
-			}, function(err, doc) {
-				if(err) {
-					// If it failed, send error
-					res.send("There was a problem adding to the database");
-				} else {
-					res.location("moodlist");
-					res.redirect("moodlist");
-				}
-			});
-		}	
-		
+	// Submit to the DB
+	collection.insert({
+		"username" : userName, 
+		"phonenumber" : phoneNumber,
+		"timestamp" : new Date(),
+		"rating" : rating,
+		"question": "How do you feel about work"
+	}, function(err, doc) {
+		if(err) {
+			// If it failed, send error
+			res.send("There was a problem adding to the database");
+		} else {
+			res.location("moodlist");
+			res.redirect("moodlist");
+		}
 	});
+
 });
 
 

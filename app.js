@@ -16,8 +16,10 @@ var db = "";
 
 if (app.get('env') === 'development') {
     db = mongo.db("mongodb://localhost:27017/moodtrack", {native_parser:true});
+    console.log("Connecting to Test Mongo");
 } else {
     db = mongo.db("mongodb://skronch:qwe123@ds035270.mongolab.com:35270/heroku_app29348857", {native_parse:true});
+    console.log("Connecting to Prod Mongo");
 }
 
 // view engine setup
