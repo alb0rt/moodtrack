@@ -1,14 +1,10 @@
 extends layout
 
 block content
-  h1.
-    Mood History
-
-  form#formAddRating(name="addrating", method="post", action="/addrating")
-  input#inputUserName(type="text", placeholder="Username", name="username")
-  input#inputUserNumber(type="text", placeholder="Phone Number", name="phonenumber")
-  button#btnSubmit(type="submit") submit
+  h1= title
 
   u1
-    for mood, i in moodlist
-        p #{mood.timestamp} #{mood.phonenumber} #{mood.username} #{mood.rating}
+    if (moodList.length === 0)
+      | User not found
+    each mood, i in moodList
+        p #{mood.timestamp.getMonth()}/#{mood.timestamp.getDate()}: #{mood.rating}

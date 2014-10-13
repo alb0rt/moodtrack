@@ -1,5 +1,10 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+	h1= title
+
+	form#formAddRating(name="/", method="post", action="/")
+		input#inputUserName(type="text", placeholder="Username", name="username")
+		input#inputUserNumber(type="text", placeholder="Phone Number", name="phonenumber")
+		button#btnSubmit(type="submit") submit
+

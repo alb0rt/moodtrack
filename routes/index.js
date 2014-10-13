@@ -5,7 +5,21 @@ var config = require('../config');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: 'Mood Tracker' });
+  res.render('index', { title: "How's work treating me?" });
+});
+
+router.post('/', function(req, res) {
+
+	var userName = req.body.username;
+	var phoneNumber = req.body.phonenumber;
+
+	var db = req.db;
+	var collection = db.collection('moodtrack').find({'username' : userName, 'phonenumber' : phoneNumber}).toArray(function(err, result) {
+		if (err) 
+			throw err;
+		console.log(result);
+		res.render('moodlist', {title: "How's work treating me?", moodList: result || []});
+	});
 });
 
 /* GET List history of ratings */
@@ -111,6 +125,8 @@ router.post('/addrating', function(req, res) {
 	});
 
 });
+
+
 
 
 module.exports = router;
