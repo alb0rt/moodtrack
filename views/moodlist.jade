@@ -2,6 +2,8 @@ extends layout
 
 block content
   h1= title
+  if (moodList.length === 0)
+      | User not found
   h2 Hey #{moodList[0].username}! 
   p Here's how work has been
   <br>

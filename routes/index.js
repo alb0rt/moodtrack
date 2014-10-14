@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var twilio = require('twilio');
 var config = require('../config');
-var utils = require('./utils');
+var utils = require('../utils');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -19,7 +19,13 @@ router.post('/', function(req, res) {
 		if (err) 
 			throw err;
 		console.log(result);
-		res.render('moodlist', {title: "Mood List", moodList: result || []});
+		if(result.length == 0) {
+			res.render('index', {title: "Moodtrack" });
+		} 
+		else {
+			res.render('moodlist', {title: "Mood List", moodList: result});
+		}
+		
 	});
 });
 
