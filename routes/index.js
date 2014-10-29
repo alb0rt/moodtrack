@@ -110,7 +110,7 @@ router.post('/sms', function(req, res) {
 
 					var averageRating = totalRating/result.length;
 
-					res.send('<Response><Sms>' + utils.generateResponse(body, averageRating) + '</Sms></Response>'); 
+					res.send('<Response><Sms>' + utils.generateResponse(body, Math.round(averageRating*10)/10) + '</Sms></Response>'); 
 				});	
 			}
 		});
