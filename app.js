@@ -43,7 +43,7 @@ app.use('/', routes);
 app.use('/users', users);
 
 app.all('*', function(req, res) {
-    res.send(404);
+    res.status(404).end();
 });
 
 // catch 404 and forward to error handler

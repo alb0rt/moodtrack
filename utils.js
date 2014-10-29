@@ -2,6 +2,9 @@ var weekendDays = [0, 6];
 var holidays = [[1,1],[5,28],[9,1],[11,27],[11,28],[12,24],[12,25]];
 var PST_OFFSET = -420;
 
+
+
+
 exports.isVacation = function() {
 	var today = new Date();
 	// since Heroku system time is GMT, add PST offset to check the date in for PST
@@ -21,9 +24,15 @@ exports.isVacation = function() {
 	return bool;
 };
 
-exports.generateResponse = function(rating) {
-	var response = "Rating recorded, ";
-	switch(rating) {
+exports.generateResponse = function(rating, averageRating) {
+	var response = "";
+
+	if(rating < averageRating) {
+		response += "👎 You're less happy today (" + rating + ") than over the past week (" + averageRating + ")";
+	} else {
+		response += "👍 You're happier today (" + rating + ") than over the past week (" + averageRating + ")";
+	}
+	/*switch(rating) {
 		case "1":
 		case "2":
 			response += ":( Hope tomorrow is better!";
@@ -39,7 +48,7 @@ exports.generateResponse = function(rating) {
 			break;
 		default:
 			break;
-	}
+	}*/
 
 	return response;
 }

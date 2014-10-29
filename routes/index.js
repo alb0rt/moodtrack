@@ -15,7 +15,7 @@ router.post('/', function(req, res) {
 	var phoneNumber = req.body.phonenumber;
 
 	var db = req.db;
-	var collection = db.collection('moodtrack').find({'username' : userName, 'phonenumber' : phoneNumber}).toArray(function(err, result) {
+	var collection = db.collection('moodtrack').find({'username' : userName, 'phonenumber' : phoneNumber}, null, {sort: {'_id':-1}}).toArray(function(err, result) {
 		if (err) 
 			throw err;
 		console.log(result);
@@ -32,11 +32,13 @@ router.post('/', function(req, res) {
 /* GET List history of ratings */
 router.get('/moodlist', function(req, res) {
 	var db = req.db;
-	var collection = db.collection('moodtrack').find().toArray(function(err, result) {
+	db.collection('moodtrack').find({}, null, {limit: 3, sort: {'_id':-1}}).toArray(function(err, result) {
+	
 		if (err)
 			throw err;
-		res.render('moodlist', {moodlist:result});
 		console.log(result);
+		res.render('moodlist', {title: "Mood List", moodList:result});
+		
 	});
 
 });
@@ -48,7 +50,6 @@ router.get('/newrating', function(req, res) {
 
 /* POST sms to add rating service */
 router.post('/sms', function(req, res) {
-	console.log("received sms");
 
 	if (twilio.validateExpressRequest(req, config.twilio.key, {url: config.twilio.smsWebhook}) || config.disableTwilioSigCheck) {
 
@@ -64,18 +65,20 @@ router.post('/sms', function(req, res) {
 		// Set our collection
 		var collection = db.collection('moodtrack');
 
+		
 		// Check to see if valid user
-		collection.find({"phonenumber" : from}).toArray(function(err, result) {
+		collection.findOne({"phonenumber" : from}, function(err, result) {
 			// Send error if user doens't exist
-			if(!result.length) {
+			if(result == null) {
 				console.log("User not found");
 				res.send("<Response><Sms>User not found</Sms></Response>");
 			}
-			// Send error if user has already sent rating for the day
+			
 			else {
+
 				// Submit to the DB
 				collection.insert({
-					"username" : result[0].username, 
+					"username" : result.username, 
 					"phonenumber" : from,
 					"timestamp" : new Date(),
 					"rating" : body,
@@ -86,11 +89,33 @@ router.post('/sms', function(req, res) {
 						console.log("There was a problem adding to the database");
 						res.send("<Response><Sms>Error adding to the database</Sms></Reponse>");
 					} 
-				});
+				});	
+
+				// create response
+
+				var today = new Date();
+				var dateRange = new Date();
+				dateRange.setDate(dateRange.getDate() - 7);
+
+				collection.find({"phonenumber" : from, "timestamp" : {$gte: dateRange, $lt: today}}).toArray(function(err, result) {
+					if(err) {
+						console.log("Error searching for data to generate the response");
+						res.send("<Response><Sms>👍</Sms></Reponse>")
+					}
+
+					var totalRating = 0;
+					for(int i = 0; i < result.length; i++) {
+						totalRating += parseInt(result[i], 10);
+					}
+
+					var averageRating = totalRating/result.length;
+
+					res.send('<Response><Sms>' + utils.generateResponse(body, averageRating) + '</Sms></Response>'); 
+				});	
 			}
 		});
 
-        res.send('<Response><Sms>' + utils.generateResponse(body) + '</Sms></Response>'); 
+        
 
     } else {
     	console.log("error");
