@@ -105,7 +105,7 @@ router.post('/sms', function(req, res) {
 
 					var totalRating = 0;
 					for(var i = 0; i < result.length; i++) {
-						totalRating += parseInt(result[i], 10);
+						totalRating += parseInt(result[i].rating, 10);
 					}
 
 					var averageRating = totalRating/result.length;
