@@ -12,7 +12,7 @@ block content
     if (moodList.length === 0)
       | User not found
 
-    canvas(id='mychart' width='400' height='400')
+    canvas(id='mychart' width='1000' height='400')
     script.
       var local_moodList =!{JSON.stringify(moodList)};
       var ratings = [];
