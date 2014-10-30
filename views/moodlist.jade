@@ -16,8 +16,15 @@ block content
     script.
       var local_moodList =!{JSON.stringify(moodList)};
       var ratings = [];
+      var dates = [];
       for(var i = 0; i < local_moodList.length; i++) {
         ratings[i] = local_moodList[i].rating;
+        dates[i] = parseDate(local_moodList[i].timestamp);
+      }
+
+      function parseDate(ts) {
+        var d = new Date(ts)
+        return d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
       }
     each mood, i in moodList
       p <b>#{mood.timestamp.getMonth()}/#{mood.timestamp.getDate()}/#{mood.timestamp.getFullYear()}</b>: #{mood.rating}
@@ -27,7 +34,7 @@ block content
   script.
     
     var buyerData = {
-      labels : ["January","February","March","April","May","June"],
+      labels : dates,
       datasets : [
         {
           fillColor : "rgba(172,194,132,0.4)",
