@@ -1,6 +1,7 @@
 extends layout
 
 block content
+
   h1= title
   if (moodList.length === 0)
       | User not found
@@ -11,5 +12,32 @@ block content
     if (moodList.length === 0)
       | User not found
 
+    canvas(id='mychart' width='400' height='400')
+    script.
+      var local_moodList =!{JSON.stringify(moodList)};
+      var ratings = [];
+      for(var i = 0; i < local_moodList.length; i++) {
+        ratings[i] = local_moodList[i].rating;
+      }
     each mood, i in moodList
-        p <b>#{mood.timestamp.getMonth()}/#{mood.timestamp.getDate()}/#{mood.timestamp.getFullYear()}</b>: #{mood.rating}
+      p <b>#{mood.timestamp.getMonth()}/#{mood.timestamp.getDate()}/#{mood.timestamp.getFullYear()}</b>: #{mood.rating}
+
+
+  script(src='/js/Chart.min.js')
+  script.
+    
+    var buyerData = {
+      labels : ["January","February","March","April","May","June"],
+      datasets : [
+        {
+          fillColor : "rgba(172,194,132,0.4)",
+          strokeColor : "#ACC26D",
+          pointColor : "#fff",
+          pointStrokeColor : "#9DB86D",
+          data : ratings
+        }
+      ]
+    }
+
+    var mychart = document.getElementById('mychart').getContext('2d');
+    new Chart(mychart).Line(buyerData);
