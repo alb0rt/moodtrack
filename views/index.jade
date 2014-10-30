@@ -1,12 +1,29 @@
 extends layout
 
 block content
+	.site-wrapper
+		.site-wrapper-inner
+			.cover-container
+				.masthead.clearfix
+					.inner
+						h3.masthead-brand Moodtrack
+						ul.nav.masthead-nav
+							li.active
+								a(href='#') Home
+							li
+								a(href='#') About
+				.inner.cover
+					h1.cover-heading Moodtrack
+					p.lead
+						| See how you really feel
+					p.lead
+						a.btn.btn-lg.btn-default(href='/login') Sign In
+				.mastfoot
+					.inner
+						p
+							| 
 
 
-	h1= title
-
-	form#formAddRating(name="/", method="post", action="/")
-		input#inputUserName(type="text", placeholder="Username", name="username")
-		input#inputUserNumber(type="text", placeholder="Phone Number", name="phonenumber")
-		button#btnSubmit(type="submit") submit
+			
+	script(src='/js/docs.min.js')
 

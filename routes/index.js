@@ -43,6 +43,11 @@ router.get('/moodlist', function(req, res) {
 
 });
 
+/* GET new sign in page. */
+router.get('/login', function(req,res) {
+	res.render('login', {title: "Moodtrack"});
+});
+
 /* GET add new rating page. */
 router.get('/newrating', function(req, res) {
 	res.render('newrating', {title: 'Add Daily Rating'});

@@ -1,0 +1,23 @@
+doctype html
+html(lang='en')
+	head
+		meta(charset='utf-8')
+		meta(http-equiv='X-UA-Compatible', content='IE=edge')
+		meta(name='viewport', content='width=device-width,initial-scale=1')
+		title= title
+		link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/stylesheets/signin.css')
+		script(src='http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js')
+		script(src='/bootstrap/js/bootstrap.min.js')
+
+	body(role='document')
+
+		.container
+			form.form-signin(role='form', name="/", method="post", action="/")
+				h2.form-signin-heading Sign in
+				input.form-control(type='text', placeholder='Username', name='username', required='', autofocus='')
+				input.form-control(type='text', placeholder='Phone Number', name='phonenumber', required='')
+				br
+				button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in
+
+		
