@@ -32,7 +32,7 @@ router.post('/', function(req, res) {
 /* GET List history of ratings */
 router.get('/moodlist', function(req, res) {
 	var db = req.db;
-	db.collection('moodtrack').find({}, null, {limit: 3, sort: {'_id':-1}}).toArray(function(err, result) {
+	db.collection('moodtrack').find({}, null, { sort: {'_id':-1}}).toArray(function(err, result) {
 	
 		if (err)
 			throw err;

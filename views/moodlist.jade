@@ -13,6 +13,8 @@ block content
       | User not found
 
     canvas(id='mychart' width='1000' height='400')
+    <br>
+    canvas(id='weekchart' width='1000' height='400')
     script.
       var local_moodList =!{JSON.stringify(moodList)};
       var ratings = [];
@@ -20,7 +22,7 @@ block content
       for(var i = 0; i < local_moodList.length; i++) {
         ratings[i] = local_moodList[i].rating;
         dates[i] = parseDate(local_moodList[i].timestamp);
-      }
+       }
 
       function parseDate(ts) {
         var d = new Date(ts)
@@ -33,18 +35,23 @@ block content
   script(src='/js/Chart.min.js')
   script.
     
-    var buyerData = {
-      labels : dates,
+    var allData = {
+      labels : dates.reverse(),
       datasets : [
         {
           fillColor : "rgba(172,194,132,0.4)",
           strokeColor : "#ACC26D",
           pointColor : "#fff",
           pointStrokeColor : "#9DB86D",
-          data : ratings
+          data : ratings.reverse()
         }
       ]
     }
 
+    // create array of arrays per week
+
+
     var mychart = document.getElementById('mychart').getContext('2d');
-    new Chart(mychart).Line(buyerData);
+    new Chart(mychart).Line(allData, {scaleOverride : true, scaleSteps : 6, scaleStepWidth : 1, scaleStartValue : 0});
+    var weekchart = document.getElementById('weekchart').getContext('2d');
+    new Chart(weekchart).Bar(allData);
