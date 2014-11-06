@@ -15,37 +15,89 @@ block content
     canvas(id='mychart' width='1000' height='400')
     <br>
     canvas(id='weekchart' width='1000' height='400')
-    script.
-      var local_moodList =!{JSON.stringify(moodList)};
-      var ratings = [];
-      var dates = [];
-      for(var i = 0; i < local_moodList.length; i++) {
-        ratings[i] = local_moodList[i].rating;
-        dates[i] = parseDate(local_moodList[i].timestamp);
-       }
 
-      function parseDate(ts) {
-        var d = new Date(ts)
-        return d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
-      }
+      
     each mood, i in moodList
       p <b>#{mood.timestamp.getMonth()}/#{mood.timestamp.getDate()}/#{mood.timestamp.getFullYear()}</b>: #{mood.rating}
 
 
   script(src='/js/Chart.min.js')
   script.
+
+    var local_moodList =!{JSON.stringify(moodList)};
+    var ratings = [];
+    var dates = [];
+    var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var weeks = new Array(52);
+
+    for(var i = 0; i < local_moodList.length; i++) {
+      ratings[i] = local_moodList[i].rating;
+      dates[i] = local_moodList[i].month + "/" + local_moodList[i].day + "/" + local_moodList[i].year;
+      if(weeks[local_moodList[i].week] == null) {
+        weeks[local_moodList[i].week] = new Array(7);
+        thisweek = local_moodList[i].week;
+      } else {
+        weeks[local_moodList[i].week][local_moodList[i].dayOfWeek] = local_moodList[i].rating;
+      }
+
+    }
+
+    function parseDate(ts) {
+      var d = new Date(ts)
+      return d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
+    }
     
     var allData = {
-      labels : dates.reverse(),
+      labels : dates,
       datasets : [
         {
           fillColor : "rgba(172,194,132,0.4)",
           strokeColor : "#ACC26D",
           pointColor : "#fff",
           pointStrokeColor : "#9DB86D",
-          data : ratings.reverse()
+          data : ratings
         }
       ]
+    }
+
+    var weekDataset = [];
+    var counter = 0;
+
+    for(var i = thisweek; i > thisweek-2; i--) {
+      if(weeks[i] != null) {
+        weekDataset[counter] = {
+          fillColor : "rgba(132,172," + i + ",0.5)",
+          strokeColor : "#ACC26D",
+          pointColor : "#fff",
+          pointStrokeColor : "#9DB86D",
+          data : weeks[i]
+        }
+        counter++;
+      }
+    }
+
+    var weekData1 = {
+      labels : days,
+      datasets : [
+        {
+          fillColor : "rgba(172,194,132,0.4)",
+          strokeColor : "#ACC26D",
+          pointColor : "#fff",
+          pointStrokeColor : "#9DB86D",
+          data : ratings
+        }, {
+          fillColor : "rgba(0,194,132,0.4)",
+          strokeColor : "#ACC26D",
+          pointColor : "#fff",
+          pointStrokeColor : "#9DB86D",
+          data : [1, 1, 1, 1, 2, 3, 4]
+        }
+      ]
+    }
+
+    var weekData = {
+      labels : days,
+      datasets : weekDataset
     }
 
     // create array of arrays per week
@@ -54,4 +106,4 @@ block content
     var mychart = document.getElementById('mychart').getContext('2d');
     new Chart(mychart).Line(allData, {scaleOverride : true, scaleSteps : 6, scaleStepWidth : 1, scaleStartValue : 0});
     var weekchart = document.getElementById('weekchart').getContext('2d');
-    new Chart(weekchart).Bar(allData);
+    new Chart(weekchart).Bar(weekData, {scaleOverride : true, scaleSteps : 6, scaleStepWidth : 1, scaleStartValue : 0});
