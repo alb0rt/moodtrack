@@ -36,9 +36,9 @@ block content
       if(weeks[local_moodList[i].week] == null) {
         weeks[local_moodList[i].week] = new Array(7);
         thisweek = local_moodList[i].week;
-      } else {
-        weeks[local_moodList[i].week][local_moodList[i].dayOfWeek-1] = local_moodList[i].rating;
       }
+      
+      weeks[local_moodList[i].week][local_moodList[i].dayOfWeek-1] = local_moodList[i].rating;
 
     }
 
