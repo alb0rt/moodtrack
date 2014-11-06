@@ -21,15 +21,17 @@ router.post('/', function(req, res) {
 				username : userName
 			} 
 		}, {
+			$project : {timestampLocal : {$subtract : ["$timestamp", 14400000]}}
+		}, {
 			$project : { 
 				username : 1,
 				timestamp : 1,
 				rating : 1,
-				year : {$year : "$timestamp"}, 
-				month : {$month: "$timestamp"},
-				day : {$dayOfMonth: "$timestamp"},
-				week: {$week: "$timestamp"},
-				dayOfWeek: {$dayOfWeek : "$timestamp"}
+				year : {$year : "$timestampLocal"}, 
+				month : {$month: "$timestampLocal"},
+				day : {$dayOfMonth: "$timestampLocal"},
+				week: {$week: "$timestampLocal"},
+				dayOfWeek: {$dayOfWeek : "$timestampLocal"}
 			}
 		}
 	], function (err, result) {
@@ -63,15 +65,22 @@ router.get('/moodlist', function(req, res) {
 				username : userName
 			} 
 		}, {
-			$project : { 
+			$project : {
 				username : 1,
 				timestamp : 1,
 				rating : 1,
-				year : {$year : "$timestamp"}, 
-				month : {$month: "$timestamp"},
-				day : {$dayOfMonth: "$timestamp"},
-				week: {$week: "$timestamp"},
-				dayOfWeek: {$dayOfWeek : "$timestamp"}
+				timestampLocal : {$subtract : ["$timestamp", 25200000]}}
+		}, {
+			$project : { 
+				username : 1,
+				timestamp : 1,
+				timestampLocal : 1,
+				rating : 1,
+				year : {$year : "$timestampLocal"}, 
+				month : {$month: "$timestampLocal"},
+				day : {$dayOfMonth: "$timestampLocal"},
+				week: {$week: "$timestampLocal"},
+				dayOfWeek: {$dayOfWeek : "$timestampLocal"}
 			}
 		}
 	], function (err, result) {

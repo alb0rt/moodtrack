@@ -44,11 +44,6 @@ block content
       weeks[local_moodList[i].week][local_moodList[i].dayOfWeek-1] = local_moodList[i].rating;
 
     }
-
-    function parseDate(ts) {
-      var d = new Date(ts)
-      return d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
-    }
     
     var allData = {
       labels : dates,
