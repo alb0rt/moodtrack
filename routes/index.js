@@ -21,11 +21,16 @@ router.post('/', function(req, res) {
 				username : userName
 			} 
 		}, {
-			$project : {timestampLocal : {$subtract : ["$timestamp", 14400000]}}
+			$project : {
+				username : 1,
+				timestamp : 1,
+				rating : 1,
+				timestampLocal : {$subtract : ["$timestamp", 25200000]}}
 		}, {
 			$project : { 
 				username : 1,
 				timestamp : 1,
+				timestampLocal : 1,
 				rating : 1,
 				year : {$year : "$timestampLocal"}, 
 				month : {$month: "$timestampLocal"},
