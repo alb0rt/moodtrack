@@ -15,7 +15,28 @@ router.post('/', function(req, res) {
 	var phoneNumber = req.body.phonenumber;
 
 	var db = req.db;
-	var collection = db.collection('moodtrack').find({'username' : userName, 'phonenumber' : phoneNumber}, null, {sort: {'_id':-1}}).toArray(function(err, result) {
+	var collection = db.collection('moodtrack').aggregate([
+		{
+			$match : {
+				username : userName
+			} 
+		}, {
+			$project : { 
+				username : 1,
+				timestamp : 1,
+				rating : 1,
+				year : {$year : "$timestamp"}, 
+				month : {$month: "$timestamp"},
+				day : {$dayOfMonth: "$timestamp"},
+				week: {$week: "$timestamp"},
+				dayOfWeek: {$dayOfWeek : "$timestamp"}
+			}
+		}
+	], function (err, result) {
+		console.log(result);
+		res.render('moodlist', {title: "Mood List", moodList:result});
+	});
+	/*var collection = db.collection('moodtrack').find({'username' : userName, 'phonenumber' : phoneNumber}, null, {sort: {'_id':-1}}).toArray(function(err, result) {
 	
 		if (err) 
 			throw err;
@@ -27,7 +48,7 @@ router.post('/', function(req, res) {
 			res.render('moodlist', {title: "Mood List", moodList: result});
 		}
 		
-	});
+	});*/
 });
 
 /* GET List history of ratings */
