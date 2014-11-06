@@ -63,10 +63,10 @@ block content
     var weekDataset = [];
     var counter = 0;
 
-    for(var i = thisweek; i > thisweek-2; i--) {
+    for(var i = thisweek; i > thisweek-3; i--) {
       if(weeks[i] != null) {
         weekDataset[counter] = {
-          fillColor : "rgba(132,172," + Math.floor(255*Math.random()) + ",0.5)",
+          fillColor : "rgba(" + Math.floor(255*Math.random()) + ",172," + Math.floor(255*Math.random()) + ",0.5)",
           strokeColor : "#ACC26D",
           pointColor : "#fff",
           pointStrokeColor : "#9DB86D",
