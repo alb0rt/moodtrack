@@ -32,23 +32,6 @@ exports.generateResponse = function(rating, averageRating) {
 	} else {
 		response += "👍 You're happier today (" + rating + ") than over the past week (" + averageRating + ")";
 	}
-	/*switch(rating) {
-		case "1":
-		case "2":
-			response += ":( Hope tomorrow is better!";
-			break;
-		case "3":
-			response += "turn that 3 into a 4 tomorrow :)";
-			break;
-		case "4":
-			response = "Yea! Keep the good days rolling";
-			break;
-		case "5":
-			response = "High five! Killing it!";
-			break;
-		default:
-			break;
-	}*/
 
 	return response;
 }

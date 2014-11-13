@@ -12,15 +12,12 @@ html(lang='en')
 
 	body(role='document')
 		.container
-			form.form-signin(role='form', name="/login", method="post", action="/login")
-				h2.form-signin-heading Sign in
+			form.form-signin(role='form', name="/signup", method="post", action="/signup")
+				h2.form-signin-heading Sign Up
 				if message && message.length != 0
 					.alert.alert-danger= message
 				input.form-control(type='text', placeholder='Username', name='username', required='', autofocus='')
 				input.form-control(type='password', placeholder='Password', name='password', required='')
 				br
-				button.btn.btn-lg(type='submit') Sign in
-			a(href='/signup') Signup
+				button.btn.btn-warning.btn-lg(type='submit') Sign Up
 
-
-		
