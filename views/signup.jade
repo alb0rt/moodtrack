@@ -9,15 +9,17 @@ html(lang='en')
 		link(rel='stylesheet', href='/stylesheets/signin.css')
 		script(src='http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js')
 		script(src='/bootstrap/js/bootstrap.min.js')
+		script(src='/js/validate-phone.js')
 
 	body(role='document')
 		.container
-			form.form-signin(role='form', name="/signup", method="post", action="/signup")
+			form.form-signin(role='form', name="signup", method="post", action="/signup")
 				h2.form-signin-heading Sign Up
 				if message && message.length != 0
 					.alert.alert-danger= message
 				input.form-control(type='text', placeholder='Username', name='username', required='', autofocus='')
 				input.form-control(type='password', placeholder='Password', name='password', required='')
+				input.form-control(type='tel', placeholder='Phone Number', name='phonenumber', required='')
 				br
-				button.btn.btn-warning.btn-lg(type='submit') Sign Up
+				button.btn.btn-warning.btn-lg(type='submit', onclick='validatePhonenumber(document.signup.phonenumber)') Sign Up
 

@@ -81,7 +81,6 @@ module.exports = function(app, passport) {
 	app.get('/profile', isLoggedIn, function(req, res) {
 		var db = req.db;
 		var userName = req.user.username;
-		//var phoneNumber = "+12034346561";
 		var collection = db.collection('moodtrack').aggregate([
 			{
 				$match : {
@@ -127,18 +126,18 @@ module.exports = function(app, passport) {
 	        res.header('Content-Type', 'text/xml');
 
 	        var body = req.param('Body').trim();
-	        // the voter, use this to keep people from voting more than once
 	        var from = req.param('From');
 
 	       	//set internal db variable
 			var db = req.db;
 
-			// Set our collection
+			// Set our collections
 			var collection = db.collection('moodtrack');
+			var userCollection = db.collection('users');
 
 			
 			// Check to see if valid user
-			collection.findOne({"phonenumber" : from}, function(err, result) {
+			userCollection.findOne({"phonenumber" : from}, function(err, result) {
 				// Send error if user doens't exist
 				if(result == null) {
 					console.log("User not found");
