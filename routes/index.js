@@ -126,7 +126,7 @@ module.exports = function(app, passport) {
 	        res.header('Content-Type', 'text/xml');
 
 	        var body = req.param('Body').trim();
-	        var from = req.param('From');
+	        var from = req.param('From');	
 
 	       	//set internal db variable
 			var db = req.db;
@@ -173,14 +173,23 @@ module.exports = function(app, passport) {
 							res.send("<Response><Sms>👍</Sms></Reponse>")
 						}
 
-						var totalRating = 0;
-						for(var i = 0; i < result.length; i++) {
-							totalRating += parseInt(result[i].rating, 10);
+						// handle new users
+
+						if(result.length == 0) {
+							res.send('<Response><Sms>Thanks! Your first rating has been recorded 👍</Sms></Response>')
+						} 
+
+						// generate response for all other users
+						else {
+							var totalRating = 0;
+							for(var i = 0; i < result.length; i++) {
+								totalRating += parseInt(result[i].rating, 10);
+							}
+
+							var averageRating = totalRating/result.length;
+
+							res.send('<Response><Sms>' + utils.generateResponse(body, Math.round(averageRating*10)/10) + '</Sms></Response>'); 
 						}
-
-						var averageRating = totalRating/result.length;
-
-						res.send('<Response><Sms>' + utils.generateResponse(body, Math.round(averageRating*10)/10) + '</Sms></Response>'); 
 					});	
 				}
 			});
