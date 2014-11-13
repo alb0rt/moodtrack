@@ -1,35 +1,11 @@
-extends layout
+var lml = document.getElementById("local_moodList");
+var lm1 = lml.innerHTML;
 
-block content
-  p.text-right 
-    a(href='/logout') Logout
-
-  h1= title
-  if (moodList.length === 0)
-      | User not found
-  h2 Hey #{moodList[0].username}! 
-  p Here's how work has been
-  <br>
-  u1
-    if (moodList.length === 0)
-      | User not found
-
-
-    h3 Past Three Weeks
-    canvas(id='weekchart' width='1000' height='400')
-    <br>
-    h3 Overall
-    canvas(id='mychart' width='1000' height='400')
-  
-
-  script(src='/js/Chart.min.js')
-  script.
-
-    var local_moodList =!{JSON.stringify(moodList)};
     var ratings = [];
     var dates = [];
     var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     var weeks = new Array(52);
+    var thisweek = 0;
 
     for(var i = 0; i < local_moodList.length; i++) {
       ratings[i] = local_moodList[i].rating;
@@ -85,3 +61,4 @@ block content
     new Chart(mychart).Line(allData, {scaleOverride : true, scaleSteps : 6, scaleStepWidth : 1, scaleStartValue : 0});
     var weekchart = document.getElementById('weekchart').getContext('2d');
     new Chart(weekchart).Line(weekData, {multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>", scaleOverride : true, scaleSteps : 6, scaleStepWidth : 1, scaleStartValue : 0});
+
