@@ -13,7 +13,7 @@ function testfunction() {
 
 function testMessage() {
 	client.sms.messages.create({
-		to : +12036450330,
+		to : 12036450330,
 		from : config.twilio.number,
 		body : "👍"
 	}, function(error, message) {
@@ -31,5 +31,5 @@ function testMessage() {
 	});
 }
 
-//testMessage();
-testfunction()
+testMessage();
+//testfunction();

@@ -31,6 +31,7 @@ module.exports = function(passport) {
 				else {
 					var newUser = new userModel();
 					newUser.username = username;
+					newUser.phonenumber = newUser.formatPhone(req.body.phonenumber);
 					newUser.generateHash(password, function(err, hash) {
 						if (err) 
 							return done(err);
