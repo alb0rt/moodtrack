@@ -19,7 +19,8 @@ html(lang='en')
 					.alert.alert-danger= message
 				input.form-control(type='text', placeholder='Username', name='username', required='', autofocus='')
 				input.form-control(type='password', placeholder='Password', name='password', required='')
-				input.form-control(type='tel', placeholder='Phone Number', name='phonenumber', required='')
+				input.form-control(type='password', placeholder='Confirm Password', name='confirmPassword', required='')
+				input.form-control(type='text', placeholder='Phone Number', name='phonenumber', required pattern='^(\+?1)?([0-9]{10})$')
 				br
-				button.btn.btn-warning.btn-lg(type='submit', onclick='validatePhonenumber(document.signup.phonenumber)') Sign Up
+				button.btn.btn-lg.btn-success.btn-block(type='submit') Sign Up
 

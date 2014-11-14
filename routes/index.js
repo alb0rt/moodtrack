@@ -9,13 +9,13 @@ module.exports = function(app, passport) {
 
 	/* GET home page. */
 	app.get('/', function(req, res) {
-	  res.render('index', { title: "Moodtrack" });
+	  res.render('index', { title: "howareyoutoday?" });
 	});
 
 	/* GET sign in page. */
 	app.get('/login', function(req,res) {
 		res.render('login', {
-			title	: "Moodtrack",
+			title	: "howareyoutoday?",
 			message	: req.flash('loginMessage') });
 	});
 	
@@ -27,7 +27,7 @@ module.exports = function(app, passport) {
 
 	app.get('/signup', function(req, res) {
 		res.render('signup', {
-			title	: "Moodtrack",
+			title	: "howareyoutoday?",
 			message : req.flash('signupMessage')});
 	});
 
@@ -107,7 +107,7 @@ module.exports = function(app, passport) {
 			}
 		], function (err, result) {
 			//console.log(result);
-			res.render('moodlist', {title: "Mood List", moodList:result});
+			res.render('moodlist', {title: "Profile", moodList:result});
 		});
 	});
 
