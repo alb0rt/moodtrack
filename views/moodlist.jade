@@ -83,6 +83,6 @@ block content
 
 
       var mychart = document.getElementById('mychart').getContext('2d');
-      new Chart(mychart).Line(allData, {scaleOverride : true, scaleSteps : 6, scaleStepWidth : 1, scaleStartValue : 0});
+      new Chart(mychart).Line(allData, {scaleOverride : true, scaleSteps : 6, scaleStepWidth : 2, scaleStartValue : 0});
       var weekchart = document.getElementById('weekchart').getContext('2d');
-      new Chart(weekchart).Line(weekData, {multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>", scaleOverride : true, scaleSteps : 6, scaleStepWidth : 1, scaleStartValue : 0});
+      new Chart(weekchart).Line(weekData, {multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>", scaleOverride : true, scaleSteps : 6, scaleStepWidth : 2, scaleStartValue : 0});

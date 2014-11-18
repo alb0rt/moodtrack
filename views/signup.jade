@@ -10,6 +10,13 @@ html(lang='en')
 		script(src='http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js')
 		script(src='/bootstrap/js/bootstrap.min.js')
 		script(src='/js/validate-phone.js')
+		style.
+			input.dirty:not(:focus):invalid {
+				background-color: #FFD9D9;
+			}
+			input.dirty:not(:focus):valid {
+				background-color: #D9ffD9;
+			}
 
 	body(role='document')
 		.container
@@ -17,10 +24,29 @@ html(lang='en')
 				h2.form-signin-heading Sign Up
 				if message && message.length != 0
 					.alert.alert-danger= message
-				input.form-control(type='text', placeholder='Username', name='username', required='', autofocus='')
-				input.form-control(type='password', placeholder='Password', name='password', required='')
-				input.form-control(type='password', placeholder='Confirm Password', name='confirmPassword', required='')
+				input.form-control(type='text', placeholder='Username', name='username', id='username', required='', autofocus='')
+				input.form-control(type='password', placeholder='Password', name='password', id='password', required='')
+				input.form-control(type='password', placeholder='Confirm Password', name='confirmPassword', id='confirmPassword', required='')
 				input.form-control(type='text', placeholder='Phone Number', name='phonenumber', required pattern='^(\+?1)?([0-9]{10})$')
 				br
 				button.btn.btn-lg.btn-success.btn-block(type='submit') Sign Up
+
+		script.
+
+			function initConfirmEmail() {
+				var elem = document.getElementById('confirmPassword');
+				elem.addEventListener('blur', verifyPassword);
+				function verifyPassword(input) {
+					input = input.srcElement;
+					var primaryPassword = document.getElementById('password').value;
+
+					if(input.value != primaryPassword) {
+						alert('Passwords must match');
+					} else {
+
+					}
+				}
+			}
+
+			initConfirmEmail();
 
