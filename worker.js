@@ -13,6 +13,23 @@ db = mongo.db("mongodb://skronch:qwe123@ds035270.mongolab.com:35270/heroku_app29
 //var collection = db.collection("moodtrack");
 var collection = db.collection("users");
 
+/* Function to update the rating scale from 1-5 to 1-10
+function updateRatings() {
+	collection.find({}, function(err, result) {
+		result.each(function(err, doc) {
+			if(!err){
+				var adjustedRating = doc.rating * 2;
+				console.log(doc._id + " " + adjustedRating);
+				collection.update({_id:doc._id}, {$set:{"rating" : adjustedRating}}, function(err) {
+					if(err) throw err;
+				});
+
+			}
+		});
+		
+	});
+}*/
+
 
 function sendReminder() {
 	if(!utils.isVacation())
@@ -29,7 +46,7 @@ function sendReminder() {
 				client.sms.messages.create({
 					to : result[i].phonenumber,
 					from : config.twilio.number,
-					body : "How was work today? (1 - Awful to 5 - Awesome!)"
+					body : "How was work today? (1 - Awful to 10 - Awesome!)"
 				}, function(error, message) {
 					if(!error) {
 						console.log("Message successfully sent with SID: ");
@@ -96,3 +113,4 @@ function testSender() {
 
 //testSender();
 sendReminder();
+//updateRatings();
