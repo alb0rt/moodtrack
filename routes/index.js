@@ -201,7 +201,7 @@ module.exports = function(app, passport) {
 	        
 
 	    } else {
-	    	console.log("error");
+	    	console.log("error initializing twilio");
 	    	res.statusCode = 403;
 	    	res.render('forbidden');
 	    }
