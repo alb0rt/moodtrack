@@ -3,7 +3,7 @@ var router = express.Router();
 var twilio = require('twilio');
 var config = require('../config');
 var utils = require('../utils');
-
+var client = new twilio.RestClient(config.twilio.sid, config.twilio.key);
 
 module.exports = function(app, passport) {
 
@@ -125,6 +125,86 @@ module.exports = function(app, passport) {
 	/* POST sms to add rating service */
 	app.post('/sms', function(req, res) {
 
+		var body = req.param('Body').trim();
+		var from = req.param('From');
+
+		// set db variable
+		var db = req.db;
+
+		// Set our collecitons
+		var collection = db.collection('moodtrack');
+		var userCollection = db.collection('users');
+
+		// Check to see if valid user
+		userCollection.findOne({"phonenumber" : from}, function(err, result) {
+			// Send error if user doens't exist
+			if(result == null) {
+				console.log("User not found");
+				client.sms.messages.create({
+					to : from,
+					from : config.twilio.number,
+					body : "User not found"
+				}, function(error, message) {		
+				});
+			} else {
+				// Submit to the DB
+					collection.insert({
+						"username" : result.username, 
+						"phonenumber" : from,
+						"timestamp" : new Date(),
+						"rating" : body,
+						"question": "How do you feel about work"
+					}, function(err, doc) {
+						if(err) {
+							// If it failed, send error
+							console.log("There was a problem adding to the database");						} 
+					});	
+
+					// create response
+
+					var today = new Date();
+					var dateRange = new Date();
+					dateRange.setDate(dateRange.getDate() - 7);
+
+					collection.find({"phonenumber" : from, "timestamp" : {$gte: dateRange, $lt: today}}).toArray(function(err, result) {
+						if(err) {
+							console.log("Error searching for data to generate the response");
+						}
+
+						// handle new users
+
+						if(result.length == 0) {
+							client.sms.messages.create({
+								to : from,
+								from : config.twilio.number,
+								body : "Thanks! Your first rating has been recorded 👍"
+							}, function(error, message) {		
+							});
+						} 
+
+						// generate response for all other users
+						else {
+							var totalRating = 0;
+							for(var i = 0; i < result.length; i++) {
+								totalRating += parseInt(result[i].rating, 10);
+							}
+
+							var averageRating = totalRating/result.length;
+							var toSend = utils.generateResponse(body, Math.round(averageRating*10)/10);
+
+
+							client.sms.messages.create({
+								to : from,
+								from : config.twilio.number,
+								body : toSend
+							}, function(error, message) {		
+							});
+
+						}
+					});	
+			}
+		});
+/*
 		if (twilio.validateExpressRequest(req, config.twilio.key, {url: config.twilio.smsWebhook}) || config.disableTwilioSigCheck) {
 
 	        res.header('Content-Type', 'text/xml');
@@ -204,7 +284,7 @@ module.exports = function(app, passport) {
 	    	console.log("error initializing twilio");
 	    	res.statusCode = 403;
 	    	res.render('forbidden');
-	    }
+	    }*/
 	});
 
 	/* POST to add rating service */
