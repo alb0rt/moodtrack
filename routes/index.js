@@ -39,6 +39,10 @@ module.exports = function(app, passport) {
 		})
 	);
 
+	app.post('/signup', function(req, res) {
+		res.redirect('/');
+	})
+
 	/* POST login to account */
 	/*router.post('/login', function(req, res) {
 
@@ -145,7 +149,7 @@ module.exports = function(app, passport) {
 				}
 				
 				else {
-
+					console.log("inserting");
 					// Submit to the DB
 					collection.insert({
 						"username" : result.username, 
