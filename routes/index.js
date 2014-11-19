@@ -192,13 +192,19 @@ module.exports = function(app, passport) {
 							var averageRating = totalRating/result.length;
 							var toSend = utils.generateResponse(body, Math.round(averageRating*10)/10);
 
-
+							var resp = twilio.TwimlResponse();
+							resp.message(toSend);
+							res.writeHead(200, {
+								'Content-Type' : 'text/xml'
+							});
+							res.end(resp.toString());
+							/*
 							client.sms.messages.create({
 								to : from,
 								from : config.twilio.number,
 								body : toSend
 							}, function(error, message) {		
-							});
+							});*/
 
 						}
 					});	
