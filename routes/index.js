@@ -135,17 +135,20 @@ module.exports = function(app, passport) {
 		var collection = db.collection('moodtrack');
 		var userCollection = db.collection('users');
 
+		// Create the response
+		var resp = twilio.TwimlResponse();
+
 		// Check to see if valid user
 		userCollection.findOne({"phonenumber" : from}, function(err, result) {
 			// Send error if user doens't exist
 			if(result == null) {
 				console.log("User not found");
-				client.sms.messages.create({
-					to : from,
-					from : config.twilio.number,
-					body : "User not found"
-				}, function(error, message) {		
+
+				resp.message("User does not exist, please sign up at howareyoutoday.herokuapp.com");
+				res.writeHead(200, {
+					'Content-Type' : 'text/xml'
 				});
+				res.end(resp.toString());
 			} else {
 				// Submit to the DB
 					collection.insert({
@@ -169,17 +172,22 @@ module.exports = function(app, passport) {
 					collection.find({"phonenumber" : from, "timestamp" : {$gte: dateRange, $lt: today}}).toArray(function(err, result) {
 						if(err) {
 							console.log("Error searching for data to generate the response");
+							resp.message("Error inserting into database");
+							res.writeHead(200, {
+								'Content-Type' : 'text/xml'
+							});
+							res.end(resp.toString());
 						}
 
 						// handle new users
 
 						if(result.length == 0) {
-							client.sms.messages.create({
-								to : from,
-								from : config.twilio.number,
-								body : "Thanks! Your first rating has been recorded 👍"
-							}, function(error, message) {		
+
+							resp.message("Thanks! Your first rating has been recorded 👍");
+							res.writeHead(200, {
+								'Content-Type' : 'text/xml'
 							});
+							res.end(resp.toString());
 						} 
 
 						// generate response for all other users
@@ -192,7 +200,7 @@ module.exports = function(app, passport) {
 							var averageRating = totalRating/result.length;
 							var toSend = utils.generateResponse(body, Math.round(averageRating*10)/10);
 
-							var resp = twilio.TwimlResponse();
+							
 							resp.message(toSend);
 							res.writeHead(200, {
 								'Content-Type' : 'text/xml'
