@@ -5,10 +5,7 @@ var config = require('../config');
 var utils = require('../utils');
 var client = new twilio.RestClient(config.twilio.sid, config.twilio.key);
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 7db3c6d4e3df37d28ead2dcf449c8841d5412a8a
 module.exports = function(app, passport) {
 
 	/* GET home page. */
@@ -43,13 +40,10 @@ module.exports = function(app, passport) {
 		})
 	);
 
-<<<<<<< HEAD
 	app.post('/signup', function(req, res) {
 		res.redirect('/');
 	})
 
-=======
->>>>>>> 7db3c6d4e3df37d28ead2dcf449c8841d5412a8a
 	/* POST login to account */
 	/*router.post('/login', function(req, res) {
 
@@ -132,7 +126,6 @@ module.exports = function(app, passport) {
 	/* POST sms to add rating service */
 	app.post('/sms', function(req, res) {
 
-<<<<<<< HEAD
 		var body = req.param('Body').trim();
 		var from = req.param('From');
 
@@ -348,88 +341,6 @@ module.exports = function(app, passport) {
 		req.logout();
 		res.redirect('/');
 	});
-=======
-		if (twilio.validateExpressRequest(req, config.twilio.key, {url: config.twilio.smsWebhook}) || config.disableTwilioSigCheck) {
-
-	        res.header('Content-Type', 'text/xml');
-
-	        var body = req.param('Body').trim();
-	        var from = req.param('From');	
-
-	       	//set internal db variable
-			var db = req.db;
-
-			// Set our collections
-			var collection = db.collection('moodtrack');
-			var userCollection = db.collection('users');
-
-			
-			// Check to see if valid user
-			userCollection.findOne({"phonenumber" : from}, function(err, result) {
-				// Send error if user doens't exist
-				if(result == null) {
-					console.log("User not found");
-					res.send("<Response><Sms>User not found</Sms></Response>");
-				}
-				
-				else {
-
-					// Submit to the DB
-					collection.insert({
-						"username" : result.username, 
-						"phonenumber" : from,
-						"timestamp" : new Date(),
-						"rating" : body,
-						"question": "How do you feel about work"
-					}, function(err, doc) {
-						if(err) {
-							// If it failed, send error
-							console.log("There was a problem adding to the database");
-							res.send("<Response><Sms>Error adding to the database</Sms></Reponse>");
-						} 
-					});	
-
-					// create response
-
-					var today = new Date();
-					var dateRange = new Date();
-					dateRange.setDate(dateRange.getDate() - 7);
-
-					collection.find({"phonenumber" : from, "timestamp" : {$gte: dateRange, $lt: today}}).toArray(function(err, result) {
-						if(err) {
-							console.log("Error searching for data to generate the response");
-							res.send("<Response><Sms>👍</Sms></Reponse>")
-						}
-
-						// handle new users
-
-						if(result.length == 0) {
-							res.send('<Response><Sms>Thanks! Your first rating has been recorded 👍</Sms></Response>')
-						} 
-
-						// generate response for all other users
-						else {
-							var totalRating = 0;
-							for(var i = 0; i < result.length; i++) {
-								totalRating += parseInt(result[i].rating, 10);
-							}
-
-							var averageRating = totalRating/result.length;
-
-							res.send('<Response><Sms>' + utils.generateResponse(body, Math.round(averageRating*10)/10) + '</Sms></Response>'); 
-						}
-					});	
-				}
-			});
-
-	        
-
-	    } else {
-	    	console.log("error");
-	    	res.statusCode = 403;
-	    	res.render('forbidden');
-	    }
-	});
 
 	/* POST to add rating service */
 	app.post('/addrating', function(req, res) {
@@ -481,12 +392,8 @@ function isLoggedIn(req, res, next) {
 
 	res.redirect('/');
 }
->>>>>>> 7db3c6d4e3df37d28ead2dcf449c8841d5412a8a
-
 	
-};
 
-<<<<<<< HEAD
 function isLoggedIn(req, res, next) {
 	if(req.isAuthenticated()) {
 		return next();
@@ -496,6 +403,4 @@ function isLoggedIn(req, res, next) {
 }
 
 
-=======
->>>>>>> 7db3c6d4e3df37d28ead2dcf449c8841d5412a8a
 //module.exports = router;
