@@ -1,52 +1,62 @@
-doctype html
-html(lang='en')
-	head
-		meta(charset='utf-8')
-		meta(http-equiv='X-UA-Compatible', content='IE=edge')
-		meta(name='viewport', content='width=device-width,initial-scale=1')
-		title= title
-		link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
-		link(rel='stylesheet', href='/stylesheets/signin.css')
-		script(src='http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js')
-		script(src='/bootstrap/js/bootstrap.min.js')
-		script(src='/js/validate-phone.js')
-		style.
-			input.dirty:not(:focus):invalid {
-				background-color: #FFD9D9;
-			}
-			input.dirty:not(:focus):valid {
-				background-color: #D9ffD9;
-			}
+extends layout
 
-	body(role='document')
+block content
+	link(rel='stylesheet' href='/stylesheets/style.css')
+	link(rel='stylesheet', href='/stylesheets/signin.css')
+
+	// Fixed navbar
+	nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
 		.container
-			form.form-signin(role='form', name="signup", method="post", action="/signup")
-				h2.form-signin-heading Sign Up
-				if message && message.length != 0
-					.alert.alert-danger= message
-				input.form-control(type='text', placeholder='Username', name='username', id='username', required='', autofocus='')
-				input.form-control(type='password', placeholder='Password', name='password', id='password', required='')
-				input.form-control(type='password', placeholder='Confirm Password', name='confirmPassword', id='confirmPassword', required='')
-				input.form-control(type='text', placeholder='Phone Number', name='phonenumber', required pattern='^(\+?1)?([0-9]{10})$')
-				br
-				button.btn.btn-lg.btn-success.btn-block(type='submit') Sign Up
+			.navbar-header
+				button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar')
+					span.sr-only Toggle navigation
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+				a.navbar-brand(href='/')= title
+			div.collapse.navbar-collapse#navbar
+				ul.nav.navbar-nav
+					li
+						a(href='/') Home
+				ul.nav.navbar-nav.navbar-right
+					li
+						a(href='/login') Login
+					li.active
+						a(href='/signup') Sign Up
 
-		script.
+		script(src='/js/validate-phone.js')
+		
 
-			function initConfirmEmail() {
-				var elem = document.getElementById('confirmPassword');
-				elem.addEventListener('blur', verifyPassword);
-				function verifyPassword(input) {
-					input = input.srcElement;
-					var primaryPassword = document.getElementById('password').value;
+	.container
+		form.form-signin(role='form', name="signup", method="post", action="/signup")
+			h2.form-signin-heading Sign Up
+			if message && message.length != 0
+				.alert.alert-danger= message
+			input.form-control(type='text', placeholder='Username', name='username', id='username', required='', autofocus='')
+			input.form-control(type='password', placeholder='Password', name='password', id='password', required='')
+			input.form-control(type='password', placeholder='Confirm Password', name='confirmPassword', id='confirmPassword', required='')
+			input.form-control(type='text', placeholder='Phone Number', name='phonenumber', required pattern='^(\+?1)?([0-9]{10})$')
+			br
+			button.btn.btn-lg.btn-success.btn-block(type='submit') Sign Up
+			h5.form-signing-heading Already have an account?
+				a(href='/login')  Login
 
-					if(input.value != primaryPassword) {
-						alert('Passwords must match');
-					} else {
+	script.
 
-					}
+		function initConfirmEmail() {
+			var elem = document.getElementById('confirmPassword');
+			elem.addEventListener('blur', verifyPassword);
+			function verifyPassword(input) {
+				input = input.srcElement;
+				var primaryPassword = document.getElementById('password').value;
+
+				if(input.value != primaryPassword) {
+					alert('Passwords must match');
+				} else {
+
 				}
 			}
+		}
 
-			initConfirmEmail();
+		initConfirmEmail();
 
