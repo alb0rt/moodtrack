@@ -25,7 +25,6 @@ build/Release
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git-
 node_modules
-zIgnore
 
 # cache files for sublime text
 *.tmlanguage.cache
@@ -41,3 +40,6 @@ zIgnore
 
 # sftp configuration file
 sftp-config.json
+
+# special ignore directory
+zIgnore
