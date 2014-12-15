@@ -17,6 +17,12 @@ var users       = require('./routes/users');
 var configDB    = require('./config/database');
 var mongoose    = require('mongoose');
 
+// Require for text worker
+var schedule    = require("node-schedule");
+var twilio      = require('twilio');
+var config      = require('./config');
+var utils       = require('./utils');
+var client      = new twilio.RestClient(config.twilio.sid, config.twilio.key);
 
 // Database
 var mongo = require('mongoskin');
@@ -99,3 +105,51 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
+
+// Daily text alert
+
+var rule = new schedule.RecurrenceRule();
+rule.hour = 18;
+rule.minute = 0;
+
+var j = schedule.scheduleJob(rule, function(){ 
+    sendReminder();
+});
+
+function sendReminder() {
+    var collection = db.collection("users");
+
+    if(!utils.isVacation())
+    {
+        var users = collection.aggregate([
+        {
+            $project : {
+                username : 1,
+                phonenumber : 1
+            }
+        }], function(err, result) {
+            for (var i = 0; i < result.length; i++) {
+                console.log(result[i].phonenumber);
+                client.sms.messages.create({
+                    to : result[i].phonenumber,
+                    from : config.twilio.number,
+                    body : "How was work today? (1 - Awful to 10 - Awesome!)"
+                }, function(error, message) {
+                    if(!error) {
+                        console.log("Message successfully sent with SID: ");
+                        console.log(message.sid);
+
+                        console.log("Message sent on: ");
+                        console.log(message.dateCreated);
+                    } else {
+                        console.log("Error sending message");
+                        console.log(err);
+                    }
+                })
+            }
+        });
+    } else {
+        console.log("Worker.js :: It's a vacation, baby!");
+    }       
+}
